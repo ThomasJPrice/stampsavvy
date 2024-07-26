@@ -28,7 +28,7 @@ const QrScanInfo = ({ data, setData }) => {
           .match({ id: cardId, business: businessId })
           .single();
 
-        const { data: businessData } = await supabase.from('business').select().match({ id: businessId }).single()
+        const { data: businessData } = await supabase.from('businesses').select().match({ id: businessId }).single()
 
         setLoyaltyData(loyaltyData);
         setBusinessData(businessData)

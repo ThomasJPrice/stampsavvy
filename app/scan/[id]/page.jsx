@@ -8,7 +8,7 @@ const Scan = async ({ params }) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
-  const {data } = await supabase.from('business').select().match({ id: businessId }).single()
+  const {data } = await supabase.from('businesses').select().match({ id: businessId }).single()
 
   console.log(data);
 
