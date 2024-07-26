@@ -24,7 +24,7 @@ const LoyaltyCard = async ({ params }) => {
         <p>Business Rel: {data.business}</p>
       </div>
 
-      <UserQR userId={userId} />
+      <UserQR userId={userId} businessId={data.business} />
     </div>
   )
 }

@@ -2,12 +2,12 @@
 
 import { useQRCode } from "next-qrcode";
 
-const UserQR = ({ userId }) => {
+const UserQR = ({ userId, businessId }) => {
   const { Canvas } = useQRCode();
 
   return (
     <Canvas
-      text={userId.toString()}
+      text={businessId + '/' + userId.toString()}
     />
   )
 }
