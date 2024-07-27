@@ -10,8 +10,6 @@ const Scan = async ({ params }) => {
 
   const {data } = await supabase.from('businesses').select().match({ id: businessId }).single()
 
-  console.log(data);
-
   if (!data) return <div className="p-4">No business found.</div>
 
   return (

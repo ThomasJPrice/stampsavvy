@@ -10,8 +10,6 @@ const LoyaltyCard = async ({ params }) => {
 
   const {data } = await supabase.from('loyaltyCards').select().match({ id: userId }).single()
 
-  console.log(data);
-
   if (!data) return <div className="p-4">No loyalty card found.</div>
 
   return (

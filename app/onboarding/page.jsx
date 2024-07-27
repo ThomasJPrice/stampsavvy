@@ -18,7 +18,8 @@ async function handleNameSubmit(formData) {
   const { data: existingBusiness, error } = await supabase.from('businesses').select().match({ belongsTo: userEmail })
 
   if (existingBusiness.length > 0) {
-    redirect('/')
+    console.log('Already exists.');
+    redirect('/customise-card')
   }
 
   const businessData = {
@@ -33,10 +34,12 @@ async function handleNameSubmit(formData) {
       .insert(businessData)
 
     if (!error) {
-      console.log('Business Created!')
+      console.log('Business Created!');
     }
   } catch (error) {
     console.log(`Error: ${error}`)
+  } finally {
+    redirect('/customise-card')
   }
 }
 
