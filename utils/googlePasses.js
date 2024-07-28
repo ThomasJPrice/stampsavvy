@@ -1,229 +1,93 @@
 'use server'
 
-const {GoogleAuth} = require('google-auth-library');
+const { GoogleAuth } = require('google-auth-library');
 const jwt = require('jsonwebtoken');
+const credentials = require('@/creds.json');
 
 const issuerId = '3388000000022364849';
-const classId = `${issuerId}.stampsavvy_class`;
+const businessName = 'thomas-bistro'
+const classId = `${issuerId}.stampsavvy_${businessName}`;
 const baseUrl = 'https://walletobjects.googleapis.com/walletobjects/v1';
-
-const credentials = require('@/creds.json');
 
 const httpClient = new GoogleAuth({
   credentials: credentials,
   scopes: 'https://www.googleapis.com/auth/wallet_object.issuer'
 });
 
-async function createPassClass() {
-  // TODO: Create a Generic pass class
-  let genericClass = {
-    'id': `${classId}`,
-    'classTemplateInfo': {
-      'cardTemplateOverride': {
-        'cardRowTemplateInfos': [
-          {
-            'twoItems': {
-              'startItem': {
-                'firstValue': {
-                  'fields': [
-                    {
-                      'fieldPath': 'object.textModulesData["points"]'
-                    }
-                  ]
-                }
-              },
-              'endItem': {
-                'firstValue': {
-                  'fields': [
-                    {
-                      'fieldPath': 'object.textModulesData["contacts"]'
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        ]
-      },
-      'detailsTemplateOverride': {
-        'detailsItemInfos': [
-          {
-            'item': {
-              'firstValue': {
-                'fields': [
-                  {
-                    'fieldPath': 'class.imageModulesData["event_banner"]'
-                  }
-                ]
-              }
-            }
-          },
-          {
-            'item': {
-              'firstValue': {
-                'fields': [
-                  {
-                    'fieldPath': 'class.textModulesData["game_overview"]'
-                  }
-                ]
-              }
-            }
-          },
-          {
-            'item': {
-              'firstValue': {
-                'fields': [
-                  {
-                    'fieldPath': 'class.linksModuleData.uris["official_site"]'
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      }
+const passClass = {
+  "id": `${classId}`,
+  "programLogo": {
+    "sourceUri": {
+      "uri": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=660&h=660"
     },
-    'imageModulesData': [
-      {
-        'mainImage': {
-          'sourceUri': {
-            'uri': 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/google-io-2021-card.png'
-          },
-          'contentDescription': {
-            'defaultValue': {
-              'language': 'en-US',
-              'value': 'Google I/O 2022 Banner'
-            }
-          }
-        },
-        'id': 'event_banner'
+    "contentDescription": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "LOGO_IMAGE_DESCRIPTION"
       }
-    ],
-    'textModulesData': [
-      {
-        'header': 'Gather points meeting new people at Google I/O',
-        'body': 'Join the game and accumulate points in this badge by meeting other attendees in the event.',
-        'id': 'game_overview'
-      }
-    ],
-    'linksModuleData': {
-      'uris': [
-        {
-          'uri': 'https://io.google/2022/',
-          'description': 'Official I/O \'22 Site',
-          'id': 'official_site'
-        }
-      ]
     }
-  };
-
-  let response;
-  try {
-    // Check if the class exists already
-    response = await httpClient.request({
-      url: `${baseUrl}/genericClass/${classId}`,
-      method: 'GET'
-    });
-
-    console.log('Class already exists');
-    console.log(response);
-  } catch (err) {
-    if (err.response && err.response.status === 404) {
-      // Class does not exist
-      // Create it now
-      response = await httpClient.request({
-        url: `${baseUrl}/genericClass`,
-        method: 'POST',
-        data: genericClass
-      });
-
-      console.log('Class insert response');
-      console.log(response);
-    } else {
-      // Something else went wrong
-      console.log(err);
+  },
+  "localizedIssuerName": {
+    "defaultValue": {
+      "language": "en-US",
+      "value": "[TEST ONLY] Heraldic Coffee"
+    }
+  },
+  "localizedProgramName": {
+    "defaultValue": {
+      "language": "en-US",
+      "value": "Heraldic Rewards"
+    }
+  },
+  "hexBackgroundColor": "#72461d",
+  "heroImage": {
+    "sourceUri": {
+      "uri": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1032&h=336"
+    },
+    "contentDescription": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "HERO_IMAGE_DESCRIPTION"
+      }
     }
   }
 }
 
-async function createPassObject(email) {
-  // TODO: Create a new Generic pass for the user
-  let objectSuffix = `${email.replace(/[^\w.-]/g, '_')}`;
-  let objectId = `${issuerId}.${objectSuffix}`;
-
-  let genericObject = {
-    'id': `${objectId}`,
-    'classId': classId,
-    'genericType': 'GENERIC_TYPE_UNSPECIFIED',
-    'hexBackgroundColor': '#4285f4',
-    'logo': {
-      'sourceUri': {
-        'uri': 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/pass_google_logo.jpg'
-      }
+const passObject = {
+  "id": `${issuerId + '.thomasjprice2_gmail.com'}`,
+  "classId": `${classId}`,
+  "loyaltyPoints": {
+    "balance": {
+      "int": "1234"
     },
-    'cardTitle': {
-      'defaultValue': {
-        'language': 'en',
-        'value': 'Google I/O \'22'
+    "localizedLabel": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "Reward Points"
       }
-    },
-    'subheader': {
-      'defaultValue': {
-        'language': 'en',
-        'value': 'Attendee'
-      }
-    },
-    'header': {
-      'defaultValue': {
-        'language': 'en',
-        'value': 'Alex McJacobs'
-      }
-    },
-    'barcode': {
-      'type': 'QR_CODE',
-      'value': `${objectId}`
-    },
-    'heroImage': {
-      'sourceUri': {
-        'uri': 'https://storage.googleapis.com/wallet-lab-tools-codelab-artifacts-public/google-io-hero-demo-only.jpg'
-      }
-    },
-    'textModulesData': [
-      {
-        'header': 'POINTS',
-        'body': '1234',
-        'id': 'points'
-      },
-      {
-        'header': 'CONTACTS',
-        'body': '20',
-        'id': 'contacts'
-      }
-    ]
-  };
-
-  // TODO: Create the signed JWT and link
-  const claims = {
-    iss: credentials.client_email,
-    aud: 'google',
-    origins: [],
-    typ: 'savetowallet',
-    payload: {
-      genericObjects: [
-        genericObject
-      ]
     }
-  };
-
-  const token = jwt.sign(claims, credentials.private_key, { algorithm: 'RS256' });
-  const saveUrl = `https://pay.google.com/gp/v/save/${token}`;
-
-  return saveUrl;
+  },
+  "barcode": {
+    "type": "QR_CODE",
+    "value": "BARCODE_VALUE",
+    "alternateText": ""
+  }
 }
 
-export const createGooglePass = async () => {
-  await createPassClass()
-  const pass = await createPassObject('thomasjprice2@gmail.com')
+export const createGooglePass = async (name) => {
+  let claims = {
+    iss: credentials.client_email,
+    aud: 'google',
+    origins: ['http://localhost:3000'],
+    typ: 'savetowallet',
+    payload: {
+      // The listed classes and objects will be created
+      loyaltyClasses: [passClass],
+      loyaltyObjects: [passObject]
+    },
+  };
 
-  return pass
+  let token = jwt.sign(claims, credentials.private_key, { algorithm: 'RS256' });
+
+  console.log(`https://pay.google.com/gp/v/save/${token}`);
 }
