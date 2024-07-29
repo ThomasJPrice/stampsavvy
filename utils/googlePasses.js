@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken');
 const credentials = require('@/creds.json');
 
 const issuerId = '3388000000022364849';
-const businessName = 'thomas-bistro'
-const classId = `${issuerId}.stampsavvy_${businessName}6`;
 const baseUrl = 'https://walletobjects.googleapis.com/walletobjects/v1';
 
 const httpClient = new GoogleAuth({
@@ -57,53 +55,99 @@ const httpClient = new GoogleAuth({
 //   }
 // }
 
-const passObject = {
-  "id": `${issuerId + '.thomasjprice2_gmail.com-6'}`,
-  "classId": `${classId}`,
-  "loyaltyPoints": {
-    "balance": {
-      "int": "7"
-    },
-    "localizedLabel": {
-      "defaultValue": {
-        "language": "en-US",
-        "value": "Points"
-      }
-    }
-  },
-  "secondaryLoyaltyPoints": {
-    "balance": {
-      "string": "7/10 until Free Coffee!"
-    },
-    "localizedLabel": {
-      "defaultValue": {
-        "language": "en-US",
-        "value": "Rewards"
-      }
-    }
-  },
-  "barcode": {
-    "type": "QR_CODE",
-    "value": "BARCODE_VALUE",
-    "alternateText": "12345678"
-  },
-  "state": "ACTIVE",
-  "accountName": "Thomas",
-  "accountId": "12345678",
-  "heroImage": {
-    "sourceUri": {
-      "uri": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&h=336"
-    },
-    "contentDescription": {
-      "defaultValue": {
-        "language": "en-US",
-        "value": "HERO_IMAGE_DESCRIPTION"
-      }
-    }
-  },
-}
+// const passObject = {
+//   "id": `${issuerId + '.thomasjprice2_gmail.com-6'}`,
+//   "classId": `${classId}`,
+//   "loyaltyPoints": {
+//     "balance": {
+//       "int": "7"
+//     },
+//     "localizedLabel": {
+//       "defaultValue": {
+//         "language": "en-US",
+//         "value": "Points"
+//       }
+//     }
+//   },
+//   "secondaryLoyaltyPoints": {
+//     "balance": {
+//       "string": "7/10 until Free Coffee!"
+//     },
+//     "localizedLabel": {
+//       "defaultValue": {
+//         "language": "en-US",
+//         "value": "Rewards"
+//       }
+//     }
+//   },
+//   "barcode": {
+//     "type": "QR_CODE",
+//     "value": "BARCODE_VALUE",
+//     "alternateText": "12345678"
+//   },
+//   "state": "ACTIVE",
+//   "accountName": "Thomas",
+//   "accountId": "12345678",
+//   "heroImage": {
+//     "sourceUri": {
+//       "uri": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&h=336"
+//     },
+//     "contentDescription": {
+//       "defaultValue": {
+//         "language": "en-US",
+//         "value": "HERO_IMAGE_DESCRIPTION"
+//       }
+//     }
+//   },
+// }
 
-export const createGooglePass = async (name) => {
+export const createGooglePass = async (name, id, businessDetails) => {
+  const passObject = {
+    "id": `${issuerId}.${id}`,
+    "classId": `${issuerId}.${businessDetails.id}`,
+    "loyaltyPoints": {
+      "balance": {
+        "int": "1"
+      },
+      "localizedLabel": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": `${businessDetails.cardInfo.unit}`
+        }
+      }
+    },
+    "secondaryLoyaltyPoints": {
+      "balance": {
+        "string": `1/${businessDetails.cardInfo.qty} until ${businessDetails.cardInfo.reward}!`
+      },
+      "localizedLabel": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": "Reward"
+        }
+      }
+    },
+    "barcode": {
+      "type": "QR_CODE",
+      "value": `${businessDetails.id}.${id}`,
+      "alternateText": `${id}`
+    },
+    "state": "ACTIVE",
+    "accountName": `${name}`,
+    "accountId": `${id}`,
+    "heroImage": {
+      "sourceUri": {
+        "uri": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&h=336"
+      },
+      "contentDescription": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": `${businessDetails.name}`
+        }
+      }
+    },
+  }
+
   let claims = {
     iss: credentials.client_email,
     aud: 'google',
@@ -111,16 +155,14 @@ export const createGooglePass = async (name) => {
     typ: 'savetowallet',
     payload: {
       // The listed classes and objects will be created
-      loyaltyClasses: [passClass],
       loyaltyObjects: [passObject]
     },
   };
 
   let token = jwt.sign(claims, credentials.private_key, { algorithm: 'RS256' });
+  const saveUrl = `https://pay.google.com/gp/v/save/${token}`;
 
-  console.log(`https://pay.google.com/gp/v/save/${token}`);
-
-  redirect(`https://pay.google.com/gp/v/save/${token}`)
+  return saveUrl;
 }
 
 
@@ -185,7 +227,18 @@ export const updateGooglePassClass = async (id, data, businessData) => {
       method: 'GET'
     })
 
-    console.log('Class already exists.')
+    try {
+      const updateResponse = await httpClient.request({
+        url: `${baseUrl}/loyaltyClass/${classId}`,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(passClass)
+      })
+    } catch (error) {
+      console.error('Error updating class:', error)
+    }
 
 
   } catch (err) {
@@ -195,7 +248,6 @@ export const updateGooglePassClass = async (id, data, businessData) => {
       return `${issuerId}.${classSuffix}`;
     }
 
-    console.log('Class does not exist. Creating...')
     try {
       const response = await httpClient.request({
         url: `${baseUrl}/loyaltyClass`,
@@ -205,7 +257,6 @@ export const updateGooglePassClass = async (id, data, businessData) => {
         },
         body: JSON.stringify(passClass)
       })
-      console.log('Class created successfully:', response)
     } catch (error) {
       console.error('Error creating class:', error)
     }

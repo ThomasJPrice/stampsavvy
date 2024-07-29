@@ -1,19 +1,23 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { createUniqueCardId, getBusinessDetails } from "@/utils"
 import { createGooglePass, testGooglePass } from "@/utils/googlePasses"
 
-async function handleNameSubmit(formData) {
-  'use server'
+const AddCard = async ({ searchParams }) => {
+  async function handleNameSubmit(formData) {
+    'use server'
+  
+    const name = formData.get('name')
+    const businessDetails = await getBusinessDetails(searchParams.business)
 
-  const name = formData.get('name')
+    const cardId = await createUniqueCardId()
+    
+    const pass = await createGooglePass(name, cardId, businessDetails)
+    // const pass = await testGooglePass(name)
+  
+    console.log(pass);
+  }
 
-  const pass = await createGooglePass(name)
-  // const pass = await testGooglePass(name)
-
-  console.log(pass);
-}
-
-const AddCard = async () => {
   return (
     <div className="p-4">
       <form>

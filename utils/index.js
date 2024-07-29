@@ -28,3 +28,31 @@ export const updateCardInfo = async (id, data) => {
     console.error('Error updating info:', error.message);
   }
 }
+
+export async function createUniqueCardId() {
+  const generateRandomId = () => {
+    return Math.floor(10000000 + Math.random() * 90000000).toString();
+  };
+
+  let isUnique = false;
+  let newId;
+
+  while (!isUnique) {
+    newId = generateRandomId();
+    const { data, error } = await supabase
+      .from('loyaltyCards')
+      .select('id')
+      .eq('id', newId);
+
+    if (error) {
+      console.error('Error checking ID:', error);
+      throw error;
+    }
+
+    if (data.length === 0) {
+      isUnique = true;
+    }
+  }
+
+  return newId;
+}
