@@ -2,6 +2,8 @@ import { UserQR } from "@/components/shared"
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 
+// TO BE REMOVED
+
 const LoyaltyCard = async ({ params }) => {
   const userId = params.id
 
