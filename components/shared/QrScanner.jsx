@@ -16,12 +16,22 @@ const Overlay = () => {
 const QrScanner = () => {
   const [data, setData] = useState('No result');
 
+  const handleResult = (result) => {
+    const qrCodeText = result?.text;
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[0-9]{8}$/;
+    if (uuidRegex.test(qrCodeText)) {
+      setData(qrCodeText);
+    } else {
+      console.error('Invalid QR code format');
+    }
+  };
+
   return (
     <>
       <QrReader
         onResult={(result, error) => {
           if (!!result) {
-            setData(result?.text);
+            handleResult(result);
           }
 
           if (!!error) {
@@ -38,8 +48,6 @@ const QrScanner = () => {
       />
 
       <QrScanInfo data={data} setData={setData} />
-
-      {/* <QrScanInfo data='7a27fd64-e1b9-4461-883f-e1f528a2aa0a/56741357' setData={setData} /> */}
     </>
   );
 }

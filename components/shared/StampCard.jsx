@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { createClient } from "@/utils/supabase/client"
 import toast from "react-hot-toast"
+import { updatePassPoints } from "@/utils/googlePasses"
 
 const StampCard = ({ setData, loyaltyData, businessData }) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -31,6 +32,8 @@ const StampCard = ({ setData, loyaltyData, businessData }) => {
       if (error) {
         throw error;
       }
+
+      await updatePassPoints(points, businessData, loyaltyData.id)
 
       setData('No result');
       toast.success(message)

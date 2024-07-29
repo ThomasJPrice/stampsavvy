@@ -14,93 +14,6 @@ const httpClient = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/wallet_object.issuer'
 });
 
-// const passClass = {
-//   "id": `${classId}`,
-//   "reviewStatus": 'UNDER_REVIEW',
-//   "programLogo": {
-//     "sourceUri": {
-//       "uri": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=660&h=660"
-//     },
-//     "contentDescription": {
-//       "defaultValue": {
-//         "language": "en-US",
-//         "value": "LOGO_IMAGE_DESCRIPTION"
-//       }
-//     }
-//   },
-//   "localizedIssuerName": {
-//     "defaultValue": {
-//       "language": "en-US",
-//       "value": "Heraldic Coffee"
-//     }
-//   },
-//   "localizedProgramName": {
-//     "defaultValue": {
-//       "language": "en-US",
-//       "value": "Buy 9 Coffees, Get 1 Free!"
-//     }
-//   },
-//   "hexBackgroundColor": "#72461d",
-//   "localizedAccountNameLabel": {
-//     "defaultValue": {
-//       "language": "en-US",
-//       "value": "Member Name"
-//     }
-//   },
-//   "localizedAccountIdLabel": {
-//     "defaultValue": {
-//       "language": "en-US",
-//       "value": "Member ID"
-//     }
-//   }
-// }
-
-// const passObject = {
-//   "id": `${issuerId + '.thomasjprice2_gmail.com-6'}`,
-//   "classId": `${classId}`,
-//   "loyaltyPoints": {
-//     "balance": {
-//       "int": "7"
-//     },
-//     "localizedLabel": {
-//       "defaultValue": {
-//         "language": "en-US",
-//         "value": "Points"
-//       }
-//     }
-//   },
-//   "secondaryLoyaltyPoints": {
-//     "balance": {
-//       "string": "7/10 until Free Coffee!"
-//     },
-//     "localizedLabel": {
-//       "defaultValue": {
-//         "language": "en-US",
-//         "value": "Rewards"
-//       }
-//     }
-//   },
-//   "barcode": {
-//     "type": "QR_CODE",
-//     "value": "BARCODE_VALUE",
-//     "alternateText": "12345678"
-//   },
-//   "state": "ACTIVE",
-//   "accountName": "Thomas",
-//   "accountId": "12345678",
-//   "heroImage": {
-//     "sourceUri": {
-//       "uri": "https://images.unsplash.com/photo-1506619216599-9d16d0903dfd?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1032&h=336"
-//     },
-//     "contentDescription": {
-//       "defaultValue": {
-//         "language": "en-US",
-//         "value": "HERO_IMAGE_DESCRIPTION"
-//       }
-//     }
-//   },
-// }
-
 export const createGooglePass = async (name, id, businessDetails) => {
   const passObject = {
     "id": `${issuerId}.${id}`,
@@ -165,8 +78,6 @@ export const createGooglePass = async (name, id, businessDetails) => {
   return saveUrl;
 }
 
-
-
 function createPassClass(classId, data, businessData) {
   const passClass = {
     "id": `${classId}`,
@@ -211,8 +122,6 @@ function createPassClass(classId, data, businessData) {
 
   return passClass
 }
-
-
 
 export const updateGooglePassClass = async (id, data, businessData) => {
   const classId = `${issuerId}.${id}`
@@ -260,5 +169,64 @@ export const updateGooglePassClass = async (id, data, businessData) => {
     } catch (error) {
       console.error('Error creating class:', error)
     }
+  }
+}
+
+export const updatePassPoints = async (newPoints, businessData, id) => {
+  var rewardMessage = ''
+  if (newPoints >= businessData.cardInfo.qty) {
+    rewardMessage = `You have a ${businessData.cardInfo.reward}!`
+  } else {
+    rewardMessage = `${newPoints}/${businessData.cardInfo.qty} until a ${businessData.cardInfo.reward}!`
+  }
+
+  // Create a patch object to update the pass
+  const patchObject = {
+    "loyaltyPoints": {
+      "balance": {
+        "int": newPoints
+      },
+      "localizedLabel": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": businessData.cardInfo.unit
+        }
+      }
+    },
+    "secondaryLoyaltyPoints": {
+      "balance": {
+        "string": rewardMessage
+      },
+      "localizedLabel": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": "Reward"
+        }
+      }
+    }
+  };
+
+  // Create a JWT token to authenticate the patch request
+  const claims = {
+    iss: credentials.client_email,
+    aud: 'google',
+    origins: ['http://localhost:3000'],
+    typ: 'savetowallet',
+    payload: {
+      loyaltyObjects: [patchObject]
+    }
+  };
+
+  try {
+    const response = await httpClient.request({
+      url: `${baseUrl}/loyaltyObject/${issuerId}.${id}`,
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(patchObject)
+    })
+  } catch (error) {
+    console.error('Error updating pass:', error);
   }
 }
