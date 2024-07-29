@@ -42,9 +42,9 @@ const StampCard = ({ setData, loyaltyData, businessData }) => {
   };
 
   const redeemReward = async () => {
-    if (loyaltyData.points < businessData.cardInfo.count) return
+    if (loyaltyData.points < businessData.cardInfo.qty) return
 
-    var tempPoints = loyaltyData.points - 10
+    var tempPoints = loyaltyData.points - businessData.cardInfo.qty
 
     setCurrentPoints(tempPoints)
 
@@ -54,7 +54,7 @@ const StampCard = ({ setData, loyaltyData, businessData }) => {
   return (
     <div>
       {/* rewards */}
-      {loyaltyData.points >= businessData.cardInfo.count ? (
+      {loyaltyData.points >= businessData.cardInfo.qty ? (
         <div>
           <p>{businessData.cardInfo.reward} available.</p>
           <Button disabled={isLoading} className='mt-2' onClick={redeemReward}>{isLoading ? <LoaderCircle className="animate-spin" /> : `Use ${businessData.cardInfo.reward}`}
@@ -62,13 +62,13 @@ const StampCard = ({ setData, loyaltyData, businessData }) => {
         </div>
       ) : <div><p>No rewards available.</p></div>}
 
-      {/* count */}
+      {/* qty */}
       <div className="flex gap-2 mt-4">
         <button onClick={decreasePoints}>
           <MinusCircle />
         </button>
 
-        <p>{currentPoints}/{businessData.cardInfo.count}</p>
+        <p>{currentPoints}/{businessData.cardInfo.qty}</p>
 
         <button onClick={() => setCurrentPoints(currentPoints + 1)}>
           <PlusCircle />

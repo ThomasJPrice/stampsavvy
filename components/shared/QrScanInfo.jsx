@@ -9,7 +9,7 @@ import { LoaderCircle } from "lucide-react";
 const QrScanInfo = ({ data, setData }) => {
   if (data === 'No result') return
 
-  var dataArray = data.split('/')
+  var dataArray = data.split('.')
   var businessId = dataArray[0]
   var cardId = dataArray[1]
 
@@ -52,9 +52,12 @@ const QrScanInfo = ({ data, setData }) => {
     <div className="flex flex-col gap-2 mt-8">
       <p className="text-xl font-medium">Card Info:</p>
 
+      <p>{businessId}</p>
+      <p>{cardId}</p>
+
       <div className="flex flex-col gap-1">
         <p className="text-lg">{loyaltyData.customer_name}</p>
-        <p>{loyaltyData.points}/{businessData.cardInfo.count} {businessData.cardInfo.unit}</p>
+        <p>{loyaltyData.points}/{businessData.cardInfo.qty} {businessData.cardInfo.unit}</p>
 
         <StampCard loyaltyData={loyaltyData} businessData={businessData} setData={setData} />
       </div>

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { createUniqueCardId, getBusinessDetails } from "@/utils"
+import { createNewCard, createUniqueCardId, getBusinessDetails } from "@/utils"
 import { createGooglePass, testGooglePass } from "@/utils/googlePasses"
 
 const AddCard = async ({ searchParams }) => {
@@ -14,6 +14,13 @@ const AddCard = async ({ searchParams }) => {
     
     const pass = await createGooglePass(name, cardId, businessDetails)
     // const pass = await testGooglePass(name)
+
+    await createNewCard({
+      id: cardId,
+      customer_name: name,
+      points: 1,
+      business: businessDetails.id
+    })
   
     console.log(pass);
   }

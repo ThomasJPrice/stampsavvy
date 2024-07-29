@@ -56,3 +56,15 @@ export async function createUniqueCardId() {
 
   return newId;
 }
+
+export const createNewCard = async (data) => {
+  try {
+    const { error } = await supabase.from('loyaltyCards').insert(data)
+
+    if (error) {
+      throw error
+    }
+  } catch (error) {
+    console.error('Error creating loyalty card:', error.message);
+  }
+}
