@@ -16,46 +16,46 @@ const httpClient = new GoogleAuth({
   scopes: 'https://www.googleapis.com/auth/wallet_object.issuer'
 });
 
-const passClass = {
-  "id": `${classId}`,
-  "reviewStatus": 'UNDER_REVIEW',
-  "programLogo": {
-    "sourceUri": {
-      "uri": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=660&h=660"
-    },
-    "contentDescription": {
-      "defaultValue": {
-        "language": "en-US",
-        "value": "LOGO_IMAGE_DESCRIPTION"
-      }
-    }
-  },
-  "localizedIssuerName": {
-    "defaultValue": {
-      "language": "en-US",
-      "value": "Heraldic Coffee"
-    }
-  },
-  "localizedProgramName": {
-    "defaultValue": {
-      "language": "en-US",
-      "value": "Buy 9 Coffees, Get 1 Free!"
-    }
-  },
-  "hexBackgroundColor": "#72461d",
-  "localizedAccountNameLabel": {
-    "defaultValue": {
-      "language": "en-US",
-      "value": "Member Name"
-    }
-  },
-  "localizedAccountIdLabel": {
-    "defaultValue": {
-      "language": "en-US",
-      "value": "Member ID"
-    }
-  }
-}
+// const passClass = {
+//   "id": `${classId}`,
+//   "reviewStatus": 'UNDER_REVIEW',
+//   "programLogo": {
+//     "sourceUri": {
+//       "uri": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=660&h=660"
+//     },
+//     "contentDescription": {
+//       "defaultValue": {
+//         "language": "en-US",
+//         "value": "LOGO_IMAGE_DESCRIPTION"
+//       }
+//     }
+//   },
+//   "localizedIssuerName": {
+//     "defaultValue": {
+//       "language": "en-US",
+//       "value": "Heraldic Coffee"
+//     }
+//   },
+//   "localizedProgramName": {
+//     "defaultValue": {
+//       "language": "en-US",
+//       "value": "Buy 9 Coffees, Get 1 Free!"
+//     }
+//   },
+//   "hexBackgroundColor": "#72461d",
+//   "localizedAccountNameLabel": {
+//     "defaultValue": {
+//       "language": "en-US",
+//       "value": "Member Name"
+//     }
+//   },
+//   "localizedAccountIdLabel": {
+//     "defaultValue": {
+//       "language": "en-US",
+//       "value": "Member ID"
+//     }
+//   }
+// }
 
 const passObject = {
   "id": `${issuerId + '.thomasjprice2_gmail.com-6'}`,
@@ -121,4 +121,93 @@ export const createGooglePass = async (name) => {
   console.log(`https://pay.google.com/gp/v/save/${token}`);
 
   redirect(`https://pay.google.com/gp/v/save/${token}`)
+}
+
+
+
+function createPassClass(classId, data, businessData) {
+  const passClass = {
+    "id": `${classId}`,
+    "reviewStatus": 'UNDER_REVIEW',
+    "programLogo": {
+      "sourceUri": {
+        "uri": `${data.logo}`
+      },
+      "contentDescription": {
+        "defaultValue": {
+          "language": "en-US",
+          "value": `${businessData.name}`
+        }
+      }
+    },
+    "localizedIssuerName": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": `${businessData.name}`
+      }
+    },
+    "localizedProgramName": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": `${data.campaign_name}`
+      }
+    },
+    "hexBackgroundColor": `${data.bgColour}`,
+    "localizedAccountNameLabel": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "Member Name"
+      }
+    },
+    "localizedAccountIdLabel": {
+      "defaultValue": {
+        "language": "en-US",
+        "value": "Member ID"
+      }
+    }
+  }
+
+  return passClass
+}
+
+
+
+export const updateGooglePassClass = async (id, data, businessData) => {
+  const classId = `${issuerId}.${id}`
+
+  const passClass = createPassClass(classId, data, businessData)
+
+  try {
+
+    // gets existing class
+    const response = await httpClient.request({
+      url: `${baseUrl}/loyaltyClass/${classId}`,
+      method: 'GET'
+    })
+
+    console.log('Class already exists.')
+
+
+  } catch (err) {
+    if (err.response && err.response.status !== 404) {
+      // Something else went wrong...
+      console.log(err);
+      return `${issuerId}.${classSuffix}`;
+    }
+
+    console.log('Class does not exist. Creating...')
+    try {
+      const response = await httpClient.request({
+        url: `${baseUrl}/loyaltyClass`,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(passClass)
+      })
+      console.log('Class created successfully:', response)
+    } catch (error) {
+      console.error('Error creating class:', error)
+    }
+  }
 }

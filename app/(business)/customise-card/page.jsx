@@ -1,17 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { getBusinessDetails } from "@/utils"
-
-async function handleFormsave(formData) {
-  'use server'
-
-  console.log(formData);
-}
+import { getBusinessDetails, updateCardInfo } from "@/utils"
+import { updateGooglePassClass } from "@/utils/googlePasses";
 
 const CustomiseCard = async ({ searchParams }) => {
   const businessData = await getBusinessDetails(searchParams.id)
-
   console.log(businessData);
+
+  async function handleFormSave(formData) {
+    'use server'
+
+    var cardInfo = {};
+    formData.forEach(function (value, key) {
+      cardInfo[key] = value;
+    });
+  
+    await updateCardInfo(searchParams.id, cardInfo)
+    await updateGooglePassClass(searchParams.id, cardInfo, businessData)
+  }
 
   return (
     <div className="p-4">
@@ -40,7 +46,7 @@ const CustomiseCard = async ({ searchParams }) => {
         <Input defaultValue='#ABC123' name='bgColour' id='bgColour' />
 
 
-        <Button className='mt-4' formAction={handleFormsave}>Save</Button>
+        <Button className='mt-4' formAction={handleFormSave}>Save</Button>
       </form>
     </div>
   )
