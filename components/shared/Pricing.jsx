@@ -4,14 +4,33 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { plans } from "@/utils/constants"
 
+function setLocalStorage(key, content) {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(key, content)
+  }
+}
+
+function getLocalStorage(key) {
+  if (typeof window !== 'undefined') {
+    const data = localStorage.getItem(key)
+    return data
+  }
+}
+
 const Pricing = () => {
   const [plan, setPlan] = useState(plans[0])
+
+  if (!getLocalStorage('selectedPlan')) {
+    setLocalStorage('selectedPlan', JSON.stringify(plans[0]))
+  }
 
   const handlePlanChange = () => {
     if (plan.title === 'Monthly') {
       setPlan(plans[1])
+      setLocalStorage('selectedPlan', JSON.stringify(plans[1]))
     } else {
       setPlan(plans[0])
+      setLocalStorage('selectedPlan', JSON.stringify(plans[0]))
     }
   }
 
@@ -27,7 +46,7 @@ const Pricing = () => {
         <p>{plan.title}</p>
         <p>£{plan.price} per {plan.duration.replace('/', '')}</p>
 
-        <a href={`/sign-up?forceRedirectUrl=${plan.link}`} className="w-full">
+        <a href={`/sign-up`} className="w-full">
           <Button>
             Get Started
           </Button>
