@@ -1,30 +1,42 @@
-import { createCanvas } from "canvas"
+'use client'
 
-const DynamicImage = ({ cardData, businessData }) => {
+import { useState } from 'react';
+import IconSelector from './IconSelector';
 
-  const width = 1032
-  const height = 336
-  const canvas = createCanvas(width, height)
-  const ctx = canvas.getContext('2d')
+export default function DynamicImage() {
+  const [selectedIcon, setSelectedIcon] = useState(null);
+  const [imageSrc, setImageSrc] = useState('');
 
-  ctx.fillStyle = businessData.cardInfo.bgColour
-  ctx.fillRect(0, 0, width, height)
+  const generateCard = async () => {
+    if (!selectedIcon) {
+      alert('Please select an icon first.');
+      return;
+    }
 
-  const cupWidth = 30;
-  const cupHeight = 50;
-  const gap = 10;
-  const maxPoints = businessData.cardInfo.qty + 1;
+    const purchases = 5; // Example number of purchases
 
-  for (let i = 0; i < maxPoints; i++) {
-    ctx.fillStyle = i < cardData.points ? '#ff9900' : '#cccccc';
-    ctx.fillRect(i * (cupWidth + gap), height / 2 - cupHeight / 2, cupWidth, cupHeight);
-  }
+    const response = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ purchases, icon: selectedIcon.displayName })
+    });
 
-  const buffer = canvas.toDataURL()
+    if (response.ok) {
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setImageSrc(url);
+    } else {
+      console.error('Failed to generate image');
+    }
+  };
 
   return (
-    <div><img src={buffer} alt="" /></div>
-  )
+    <div>
+      <IconSelector onSelect={(Icon) => setSelectedIcon(Icon)} />
+      <button onClick={generateCard}>Generate Loyalty Card</button>
+      {imageSrc && <img src={imageSrc} alt="Loyalty Card" />}
+    </div>
+  );
 }
-
-export default DynamicImage
