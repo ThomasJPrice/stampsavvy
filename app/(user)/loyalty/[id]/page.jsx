@@ -1,4 +1,4 @@
-import { UserQR } from "@/components/shared"
+import { DynamicImage, UserQR } from "@/components/shared"
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
 
@@ -10,21 +10,28 @@ const LoyaltyCard = async ({ params }) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)
 
-  const {data } = await supabase.from('loyaltyCards').select().match({ id: userId }).single()
+  const { data } = await supabase.from('loyaltyCards').select().match({ id: userId }).single()
 
   if (!data) return <div className="p-4">No loyalty card found.</div>
 
+  const { data: businessData } = await supabase.from('businesses').select().match({ id: data.business}).single()
+
+  console.log(businessData);
+
   return (
     <div className="p-4">
-      <p className="text-lg font-semibold">Loyalty Card</p>
+      <p className="text-lg font-semibold">{businessData.cardInfo.campaign_name}</p>
 
       <div className="my-4">
         <p>Name: {data.customer_name}</p>
         <p>Points: {data.points}</p>
-        <p>Business Rel: {data.business}</p>
+        <p>Business: {businessData.name}</p>
       </div>
 
-      <UserQR userId={userId} businessId={data.business} />
+      <DynamicImage
+        cardData={data}
+        businessData={businessData}
+      />
     </div>
   )
 }
