@@ -1,7 +1,10 @@
 import { Pricing } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import {
+  SignedIn,
   SignedOut,
+  UserButton,
+  UserProfile,
 } from '@clerk/nextjs'
 import { currentUser } from '@clerk/nextjs/server';
 
@@ -18,7 +21,11 @@ export default async function Home() {
         </Button>
       </SignedOut>
 
-      <Pricing email={user.emailAddresses[0].emailAddress} />
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+
+      <Pricing email={user?.emailAddresses[0]?.emailAddress} />
     </main>
   );
 }

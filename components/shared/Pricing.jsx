@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "../ui/button"
 import { plans } from "@/utils/constants"
 
-const Pricing = ({ email }) => {
+const Pricing = () => {
   const [plan, setPlan] = useState(plans[0])
 
   const handlePlanChange = () => {
@@ -27,9 +27,9 @@ const Pricing = ({ email }) => {
         <p>{plan.title}</p>
         <p>£{plan.price} per {plan.duration.replace('/', '')}</p>
 
-        <a href={plan.link + '?prefilled_email=' + email} className="w-full">
+        <a href={`/sign-up?forceRedirectUrl=${plan.link}`} className="w-full">
           <Button>
-            Subscribe
+            Get Started
           </Button>
         </a>
       </div>
