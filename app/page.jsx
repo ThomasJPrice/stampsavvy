@@ -1,3 +1,4 @@
+import { PricingGrid } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import {
   ClerkProvider,
@@ -21,6 +22,8 @@ export default async function Home() {
       <SignedIn>
         <UserButton />
       </SignedIn>
+
+      <PricingGrid />
     </main>
   );
 }
