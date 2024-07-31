@@ -1,14 +1,13 @@
-import { PricingGrid } from '@/components/shared';
+import { Pricing } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
   SignedOut,
-  UserButton
 } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Home() {
+  const user = await currentUser()
+
   return (
     <main className="p-8">
       <h1>StampSavvy</h1>
@@ -19,11 +18,7 @@ export default async function Home() {
         </Button>
       </SignedOut>
 
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-
-      <PricingGrid />
+      <Pricing email={user.emailAddresses[0].emailAddress} />
     </main>
   );
 }
