@@ -1,9 +1,9 @@
-import { plans } from "@/components/shared/Pricing";
 import { headers } from "next/headers"
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/utils/supabase/server"
 import { cookies } from "next/headers"
+import { plans } from "@/utils/constants";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -56,15 +56,41 @@ export async function POST(req) {
             .from('subscriptions')
             .upsert({
               user_email: customer.email,
-              stripe_subscription_id: data.object.id,
-              status: data.object.status
+              stripe_customer_id: customer.id,
+              status: 'active'
             })
         }
 
-        break
+        return NextResponse.json(
+          { message: "successfully received" },
+          { status: 200 }
+        );
       }
-    }
-  } catch (error) {
 
+      case 'customer.subscription.deleted': {
+        // Remove access to product, subscription cancelled
+
+        const subscription = await stripe.subscriptions.retrieve(data.object.id)
+
+        await supabase.from('subscriptions').update({ 'status': 'cancelled' }).match({ 'stripe_customer_id': subscription.customer })
+
+        return NextResponse.json(
+          { message: "successfully received" },
+          { status: 200 }
+        );
+      }
+
+
+      default:
+    }
+
+    return NextResponse.json(
+      { message: "successfully received" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(
+      'stripe error: ' + error.message + ' Event type: ' + eventType
+    )
   }
 }
