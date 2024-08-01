@@ -2,8 +2,8 @@ import { Coffee } from "lucide-react";
 
 export default function DynamicImage() {
   const BGCOLOUR = 'bg-[#5C3E32]';
-  const QTY = 4 + 1; // Buy 4 get 1 free, total of 5 icons
-  const POINTS = 1; // Number of points achieved
+  const QTY = 9 + 1; // Buy 4 get 1 free, total of 5 icons
+  const POINTS = 2; // Number of points achieved
   const ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvZmZlZSI+PHBhdGggZD0iTTEwIDJ2MiIvPjxwYXRoIGQ9Ik0xNCAydjIiLz48cGF0aCBkPSJNMTYgOGExIDEgMCAwIDEgMSAxdjhhNCA0IDAgMCAxLTQgNEg3YTQgNCAwIDAgMS00LTRWOWExIDEgMCAwIDEgMS0xaDE0YTQgNCAwIDEgMSAwIDhoLTEiLz48cGF0aCBkPSJNNiAydjIiLz48L3N2Zz4=';
 
   const renderIcons = (start, end) => {
@@ -23,7 +23,7 @@ export default function DynamicImage() {
           style={{ borderColor: borderColor }}
         >
           {/* <ICON.type color={iconColor} className={`w-full h-full ${QTY <= 5 ? '' : 'p-2'}`} /> */}
-          <img src={ICON} className={`h-full w-full ${QTY <= 5 ? '' : 'p-2'}`} />
+          <Coffee className={`h-full w-full ${QTY <= 5 ? '' : 'p-2'}`} color={iconColor} />
         </div>
       );
     });
