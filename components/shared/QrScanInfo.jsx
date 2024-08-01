@@ -7,17 +7,15 @@ import { Button } from "../ui/button";
 import { LoaderCircle } from "lucide-react";
 
 const QrScanInfo = ({ data, setData }) => {
-  if (data === 'No result') return
+  const [loyaltyData, setLoyaltyData] = useState(null);
+  const [businessData, setBusinessData] = useState(null)
+  const [error, setError] = useState(null);
 
   var dataArray = data.split('.')
   var businessId = dataArray[0]
   var cardId = dataArray[1]
 
   const supabase = createClient()
-
-  const [loyaltyData, setLoyaltyData] = useState(null);
-  const [businessData, setBusinessData] = useState(null)
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +36,7 @@ const QrScanInfo = ({ data, setData }) => {
     };
 
     fetchData();
-  }, [cardId, businessId]);
+  }, [cardId, businessId, supabase]);
 
   if (error) {
     return <div>Error: {error}</div>;

@@ -47,7 +47,7 @@ const QrScanner = () => {
         ViewFinder={Overlay}
       />
 
-      <QrScanInfo data={data} setData={setData} />
+      {data && <QrScanInfo data={data} setData={setData} />}
     </>
   );
 }
