@@ -1,10 +1,46 @@
 import { ImageResponse } from "@vercel/og";
 import Bean from '@/assets/icons/bean.svg';
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-export async function GET() {
-  const BGCOLOUR = '#5C3E32';
-  const QTY = 4 + 1; // Buy 4 get 1 free, total of 10 icons
-  const POINTS = 0; // Number of points achieved
+async function getData(supabase, id) {
+  const { data: userData } = await supabase.from('loyaltyCards').select().match({ id: id }).single()
+
+  if (!userData) return {}
+
+  const { data: businessData } = await supabase.from('businesses').select().match({ id: userData.business }).single()
+
+  if (!businessData) return {}
+
+  return {
+    userData: userData,
+    cardData: businessData.cardInfo
+  }
+}
+
+export async function GET(request) {
+
+  const cookieStore = cookies()
+  const supabase = createClient(cookieStore)
+
+  let cardId;
+
+  try {
+    cardId = request.nextUrl.searchParams.get('id')
+  } catch (error) {
+    return NextResponse.json({ error: err.message }, { status: 400 })
+  }
+
+  if (!cardId) return NextResponse.json({ error: 'No id found' }, { status: 400 })
+
+  const { userData, cardData } = await getData(supabase, cardId)
+
+  if (!userData || !cardData) return NextResponse.json({ error: 'No loyalty card details found' }, { status: 400 })
+
+  const BGCOLOUR = cardData.bgColour;
+  const QTY = parseInt(cardData.qty) + 1; // Buy 4 get 1 free, total of 10 icons
+  const POINTS = userData.points; // Number of points achieved
 
   const renderIcons = (start, end) => {
     return Array.from({ length: end - start }).map((_, index) => {
@@ -44,15 +80,15 @@ export async function GET() {
     (
       <div tw="w-full h-full flex flex-col justify-between px-16 py-8" style={{ backgroundColor: BGCOLOUR }}>
         {QTY <= 5 ? (
-          <div tw="flex justify-center gap-4 my-auto" style={{ gap: '16px' }}>
+          <div tw="flex justify-center my-auto" style={{ gap: '16px' }}>
             {renderIcons(0, QTY)}
           </div>
         ) : (
-          <div tw="w-full h-full flex flex-col justify-between" style={{ gap: '16px'}}>
-            <div tw="flex justify-center gap-4" style={{ gap: '16px' }}>
+          <div tw="w-full h-full flex flex-col justify-between" style={{ gap: '16px' }}>
+            <div tw="flex justify-center" style={{ gap: '16px' }}>
               {renderIcons(0, halfQty)}
             </div>
-            <div tw="flex justify-center gap-4" style={{ gap: '16px' }}>
+            <div tw="flex justify-center" style={{ gap: '16px' }}>
               {renderIcons(halfQty, QTY)}
             </div>
           </div>
