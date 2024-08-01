@@ -1,42 +1,51 @@
-'use client'
-
-import { useState } from 'react';
-import IconSelector from './IconSelector';
+import { Coffee } from "lucide-react";
 
 export default function DynamicImage() {
-  const [selectedIcon, setSelectedIcon] = useState(null);
-  const [imageSrc, setImageSrc] = useState('');
+  const BGCOLOUR = 'bg-[#5C3E32]';
+  const QTY = 4 + 1; // Buy 4 get 1 free, total of 5 icons
+  const POINTS = 4; // Number of points achieved
+  const ICON = <Coffee />
 
-  const generateCard = async () => {
-    if (!selectedIcon) {
-      alert('Please select an icon first.');
-      return;
-    }
+  const renderIcons = (start, end) => {
+    return Array.from({ length: end - start }).map((_, index) => {
+      const isAchieved = index + start < POINTS;
+      const isLast = index + start === QTY - 1;
+      const lastAchieved = POINTS === QTY - 1;
+      const color = isAchieved || (isLast && lastAchieved) ? '#ff9900' : '#cccccc';
+      const bgColor = isLast ? 'bg-[#77dd77] bg-opacity-30' : 'bg-transparent';
+      const borderColor = isAchieved || (isLast && lastAchieved) ? (isLast ? '#77dd77' : '#ff9900') : '#cccccc';
+      const iconColor = isAchieved || (isLast && lastAchieved) ? (isLast ? '#77dd77' : '#ff9900') : '#cccccc';
 
-    const purchases = 5; // Example number of purchases
-
-    const response = await fetch('/api/generate-image', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ purchases, icon: selectedIcon.displayName })
+      return (
+        <div
+          key={index}
+          className={`${QTY <= 5 ? 'w-full my-auto p-6' : 'h-full p-3'} ${bgColor} aspect-square border rounded-full`}
+          style={{ borderColor: borderColor }}
+        >
+          <ICON.type color={iconColor} className={`w-full h-full ${QTY <= 6 ? '' : 'p-2'}`} />
+        </div>
+      );
     });
-
-    if (response.ok) {
-      const blob = await response.blob();
-      const url = URL.createObjectURL(blob);
-      setImageSrc(url);
-    } else {
-      console.error('Failed to generate image');
-    }
   };
 
+  const halfQty = Math.ceil(QTY / 2);
+
   return (
-    <div>
-      <IconSelector onSelect={(Icon) => setSelectedIcon(Icon)} />
-      <button onClick={generateCard}>Generate Loyalty Card</button>
-      {imageSrc && <img src={imageSrc} alt="Loyalty Card" />}
+    <div className={`w-[1125px] h-[432px] ${BGCOLOUR} px-16 py-8 flex gap-4 flex-col justify-between`}>
+      {QTY <= 5 ? (
+        <div className="flex justify-center gap-4 h-full">
+          {renderIcons(0, QTY)}
+        </div>
+      ) : (
+        <>
+          <div className="flex justify-center gap-4 h-full">
+            {renderIcons(0, halfQty)}
+          </div>
+          <div className="flex justify-center gap-4 h-full">
+            {renderIcons(halfQty, QTY)}
+          </div>
+        </>
+      )}
     </div>
   );
 }
