@@ -17,8 +17,6 @@ async function handleNameSubmit(formData) {
 
   const { data: existingBusiness, error } = await supabase.from('businesses').select().match({ belongsTo: userEmail })
 
-  console.log(existingBusiness);
-
   if (existingBusiness.length > 0) {
     console.log('Already exists.');
     redirect(`/customise-card?id=${existingBusiness[0].id}`)

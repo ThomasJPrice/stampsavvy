@@ -2,9 +2,9 @@ import { ImageResponse } from "@vercel/og";
 import { Coffee } from "lucide-react";
 
 export async function GET() {
-  const BGCOLOUR = 'bg-[#5C3E32]';
+  const BGCOLOUR = '#5C3E32';
   const QTY = 4 + 1; // Buy 4 get 1 free, total of 5 icons
-  const POINTS = 2; // Number of points achieved
+  const POINTS = 4; // Number of points achieved
   const ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNvZmZlZSI+PHBhdGggZD0iTTEwIDJ2MiIvPjxwYXRoIGQ9Ik0xNCAydjIiLz48cGF0aCBkPSJNMTYgOGExIDEgMCAwIDEgMSAxdjhhNCA0IDAgMCAxLTQgNEg3YTQgNCAwIDAgMS00LTRWOWExIDEgMCAwIDEgMS0xaDE0YTQgNCAwIDEgMSAwIDhoLTEiLz48cGF0aCBkPSJNNiAydjIiLz48L3N2Zz4=';
 
   const renderIcons = (start, end) => {
@@ -19,17 +19,23 @@ export async function GET() {
       const borderColor = isAchieved || (isLast && lastAchieved) ? (isLast ? '#77dd77' : '#ff9900') : '#cccccc';
       const iconColor = isAchieved || (isLast && lastAchieved) ? (isLast ? '#77dd77' : '#ff9900') : '#cccccc';
 
-      // Determine dimensions and padding based on QTY
-      const padding = QTY <= 5 ? '24px' : '12px'; // 'p-6' to '24px' and 'p-3' to '12px'
-      const margin = QTY <= 5 ? '24px' : '0'; // 'my-auto' to '24px' and remove margin if QTY > 5
-
       return (
         <div
           key={index}
-          tw={`${QTY <= 5 ? 'w-full my-auto p-6' : 'h-full p-3'} ${bgColor} border rounded-full flex`}
-          style={{ borderColor: borderColor, aspectRatio: 1 }}
+          tw={`flex items-center justify-center rounded-full border h-full aspect-[1] ${bgColor} ${QTY <= 5 ? 'my-auto p-6' : 'h-full p-3'}`}
+          style={{
+            borderColor: borderColor,
+          }}
         >
-          <img src={ICON} tw={`h-full w-full ${QTY <= 5 ? '' : 'p-2'}`} />
+          <img
+            src={ICON}
+            alt="icon"
+            style={{
+              width: '100%',
+              height: '100%',
+              padding: QTY <= 6 ? '0' : '8px',
+            }}
+          />
         </div>
       );
     });
@@ -39,9 +45,9 @@ export async function GET() {
 
   return new ImageResponse(
     (
-      <div tw={`w-[1032px] h-[336px] ${BGCOLOUR} px-16 py-8 flex gap-4 flex-col justify-between`}>
+      <div tw="w-full h-full flex flex-col justify-between px-16 py-8" style={{ backgroundColor: BGCOLOUR }}>
         {QTY <= 5 ? (
-          <div tw="flex justify-center gap-4 h-full">
+          <div tw="flex justify-center gap-4 h-full" style={{ gap: '16px' }}>
             {renderIcons(0, QTY)}
           </div>
         ) : (
@@ -56,12 +62,11 @@ export async function GET() {
         )}
       </div>
     ),
-    // Options
     {
       width: 1032,
       height: 336,
       status: 200,
-      statusText: "Ok"
+      statusText: "Ok",
     }
-  )
+  );
 }

@@ -16,8 +16,6 @@ const LoyaltyCard = async ({ params }) => {
 
   const { data: businessData } = await supabase.from('businesses').select().match({ id: data.business}).single()
 
-  console.log(businessData);
-
   return (
     <div className="p-4">
       <p className="text-lg font-semibold">{businessData.cardInfo.campaign_name}</p>

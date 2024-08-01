@@ -21,8 +21,8 @@ const AddCard = async ({ searchParams }) => {
       points: 1,
       business: businessDetails.id
     })
-  
-    console.log(pass);
+
+    console.log(pass)
   }
 
   return (

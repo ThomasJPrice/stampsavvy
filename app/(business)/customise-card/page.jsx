@@ -20,8 +20,6 @@ const CustomiseCard = async ({ searchParams }) => {
 
   const cardInfo = businessData.cardInfo
 
-  console.log(cardInfo);
-
   return (
     <div className="p-4">
       <h1>Customise your Loyalty Card Campaign!</h1>
