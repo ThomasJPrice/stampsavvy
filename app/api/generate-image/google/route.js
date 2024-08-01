@@ -25,9 +25,11 @@ export async function GET(request) {
   const supabase = createClient(cookieStore)
 
   let cardId;
+  let POINTS = 0;
 
   try {
     cardId = request.nextUrl.searchParams.get('id')
+    POINTS = parseInt(request.nextUrl.searchParams.get('points'))
   } catch (error) {
     return NextResponse.json({ error: err.message }, { status: 400 })
   }
@@ -40,7 +42,9 @@ export async function GET(request) {
 
   const BGCOLOUR = cardData.bgColour;
   const QTY = parseInt(cardData.qty) + 1; // Buy 4 get 1 free, total of 10 icons
-  const POINTS = userData.points; // Number of points achieved
+
+  // const POINTS = userData.points; // Number of points achieved
+  
 
   const renderIcons = (start, end) => {
     return Array.from({ length: end - start }).map((_, index) => {
