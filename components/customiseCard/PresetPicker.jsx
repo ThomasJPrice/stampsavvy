@@ -6,7 +6,7 @@ import Car from '@/assets/icons/car.svg';
 
 const presets = [
   {
-    name: 'Coffee Shops',
+    name: 'Coffee Shop',
     icon: Bean,
     formData: {
       campaign_name: 'Buy 9 Coffees, Get 1 Free!',
@@ -17,7 +17,7 @@ const presets = [
     }
   },
   {
-    name: 'Hairdressers',
+    name: 'Hairdresser',
     icon: Scissors,
     formData: {
       campaign_name: 'Have 4 Cuts, Get the 5th Free!',
@@ -28,7 +28,7 @@ const presets = [
     }
   },
   {
-    name: 'Car Washes',
+    name: 'Car Wash',
     icon: Car,
     formData: {
       campaign_name: 'Have 4 Washes, Get the 5th Half Price!',
@@ -50,7 +50,7 @@ const PresetPicker = ({ formData, setFormData }) => {
 
   return (
     <div>
-      <h3>Let's get started by choosing a preset:</h3>
+      <h3>Choose a preset:</h3>
 
       <div className="flex gap-2 mt-3 flex-wrap">
         {presets.map((item, index) => (
