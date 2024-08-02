@@ -2,7 +2,6 @@ import { cookies } from "next/headers"
 import { createClient } from "./supabase/server"
 import { currentUser } from "@clerk/nextjs/server"
 
-
 export const getBusinessDetails = async (id) => {
   const cookieStore = cookies()
   const supabase = createClient(cookieStore)

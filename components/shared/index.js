@@ -4,6 +4,7 @@ import QrScanInfo from "./QrScanInfo";
 import StampCard from "./StampCard";
 import Pricing from "./Pricing";
 import DynamicImage from "./DynamicImage";
+import CustomiseCardForm from "./CustomiseCardForm";
 
 export {
   UserQR,
@@ -11,5 +12,6 @@ export {
   QrScanInfo,
   StampCard,
   Pricing,
-  DynamicImage
+  DynamicImage,
+  CustomiseCardForm
 }

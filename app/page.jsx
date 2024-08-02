@@ -15,14 +15,8 @@ export default async function Home() {
     <main className="p-8">
       <h1>StampSavvy</h1>
 
-      <SignedOut>
-        <Button variant='outline'>
-          <a href="/sign-up">Sign Up</a>
-        </Button>
-      </SignedOut>
-
       <SignedIn>
-        <UserButton />
+        <a href="">My dashboard</a>
       </SignedIn>
 
       <Pricing email={user?.emailAddresses[0]?.emailAddress} />
