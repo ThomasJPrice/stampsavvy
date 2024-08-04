@@ -1,4 +1,4 @@
-import { ColourPicker } from ".";
+import { ColourPicker, FileUpload } from ".";
 
 const BrandingOptions = ({ formData, setFormData }) => {
   return (
@@ -18,6 +18,8 @@ const BrandingOptions = ({ formData, setFormData }) => {
           setFormData={setFormData}
         />
       </div>
+
+      <FileUpload formData={formData} setFormData={setFormData} />
     </div>
   );
 };

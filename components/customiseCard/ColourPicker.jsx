@@ -5,10 +5,17 @@ import { Input } from "../ui/input";
 
 const ColourPicker = ({ title, value, formData, setFormData }) => {
   const handleChangeComplete = (color) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      fgColour: color.hex, // Update the specific color value in formData
-    }));
+    if (title === 'Main Colour') {
+      setFormData((prevData) => ({
+        ...prevData,
+        fgColour: color.hex, // Update the specific color value in formData
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        bgColour: color.hex, // Update the specific color value in formData
+      }));
+    }
   };
 
   return (

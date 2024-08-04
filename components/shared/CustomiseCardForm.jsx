@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from "react";
-import { BrandingOptions, PresetPicker } from "../customiseCard";
+import { BrandingOptions, FileUpload, LoyaltyCardOptions, PresetPicker } from "../customiseCard";
+import { Label } from "../ui/label";
 
 const CustomiseCardForm = ({ cardInfo, handleFormSave }) => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const CustomiseCardForm = ({ cardInfo, handleFormSave }) => {
   return (
     <div className="w-full flex flex-row gap-16">
       {/* form */}
-      <div className="w-1/3 border">
+      <div className="w-1/3">
         {/* branding */}
         <div>
           <h4 className="font-medium text-lg">Your Branding</h4>
@@ -41,7 +42,8 @@ const CustomiseCardForm = ({ cardInfo, handleFormSave }) => {
           </div>
 
           <div>
-            <p>Create your own:</p>
+            <h3>Create your own:</h3>
+            <LoyaltyCardOptions formData={formData} setFormData={setFormData} />
           </div>
         </div>
       </div>
