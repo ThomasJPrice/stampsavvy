@@ -42,12 +42,11 @@ const presets = [
   },
 ]
 
-const PresetPicker = ({ formData, setFormData }) => {
+const PresetPicker = ({ setFieldValue }) => {
   const handlePresetClick = (presetFormData) => {
-    // setFormData((prevData) => ({
-    //   ...prevData,
-    //   ...presetFormData,
-    // }));
+    for (const key in presetFormData) {
+      setFieldValue(key, presetFormData[key]);
+    }
   };
 
   return (
@@ -56,7 +55,7 @@ const PresetPicker = ({ formData, setFormData }) => {
 
       <div className="flex gap-2 mt-3 flex-wrap">
         {presets.map((item, index) => (
-          <button className='flex-1 inline-flex whitespace-nowrap flex-col items-center gap-1 border rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground py-1 px-2' key={item+index} onClick={() => handlePresetClick(item.formData)}>
+          <button type='button' className='flex-1 inline-flex whitespace-nowrap flex-col items-center gap-1 border rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:ring-ring border-input bg-background hover:bg-accent hover:text-accent-foreground py-1 px-2' key={item+index} onClick={() => handlePresetClick(item.formData)}>
             <span><item.icon className='w-8 h-8' /></span>
             <span>{item.name}</span>
           </button>

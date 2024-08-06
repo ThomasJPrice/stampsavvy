@@ -1,28 +1,22 @@
 import { ColourPicker, FileUpload } from ".";
 import { Input } from "../ui/input";
 
-const BrandingOptions = ({ values, handleChange }) => {
+const BrandingOptions = () => {
   return (
     <div>
       {/* Colour pickers */}
       <div className="flex gap-2 flex-wrap">
-        <Input type="color" name="fgColour" id="fgColour" value={values.fgColour} onChange={handleChange} />
-        {/* <ColourPicker
+        <ColourPicker
           title="Main Colour"
-          value={values.bgColour}
-          handleChange={handleChange}
-          formData={formData}
-          setFormData={setFormData}
-        /> */}
-        {/* <ColourPicker
+          name='fgColour'
+        />
+        <ColourPicker
           title="Background Colour"
-          value={formData.bgColour}
-          formData={formData}
-          setFormData={setFormData}
-        /> */}
+          name='bgColour'
+        />
       </div>
 
-      {/* <FileUpload formData={formData} setFormData={setFormData} /> */}
+      <FileUpload name='logo' />
     </div>
   );
 };
