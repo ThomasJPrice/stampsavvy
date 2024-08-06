@@ -3,19 +3,24 @@ import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Input } from "../ui/input";
 
-const ColourPicker = ({ title, value, formData, setFormData }) => {
+const ColourPicker = ({ title, value, handleChange }) => {
   const handleChangeComplete = (color) => {
-    if (title === 'Main Colour') {
-      setFormData((prevData) => ({
-        ...prevData,
-        fgColour: color.hex, // Update the specific color value in formData
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        bgColour: color.hex, // Update the specific color value in formData
-      }));
-    }
+    console.log(color);
+
+    value = color.hex
+    
+
+    // if (title === 'Main Colour') {
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     fgColour: color.hex, // Update the specific color value in formData
+    //   }));
+    // } else {
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     bgColour: color.hex, // Update the specific color value in formData
+    //   }));
+    // }
   };
 
   return (
@@ -31,7 +36,7 @@ const ColourPicker = ({ title, value, formData, setFormData }) => {
           <PopoverContent className="w-full p-0 border-none">
             <BlockPicker
               color={value}
-              onChangeComplete={handleChangeComplete}
+              onChangeComplete={handleChange}
               triangle="top"
             />
           </PopoverContent>

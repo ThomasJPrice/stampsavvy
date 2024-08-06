@@ -1,50 +1,57 @@
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import React, { useState } from 'react';
 
-const CustomInput = ({ data }) => {
-  console.log(data);
-  
-  <div>
-    <Label>{data.label}</Label>
-    <Input type={data.type} placeholder={data.placeholder} />
-  </div>
-}
+const LoyaltyCardOptions = ({ values, handleChange }) => {
+  const inputs = [
+    {
+      name: 'campaign_name',
+      label: 'Campaign Name',
+      type: 'text',
+      helper: '',
+      placeholder: 'Buy X, Get Y',
+    },
+    {
+      name: 'unit',
+      label: 'Unit',
+      type: 'text',
+      helper: '',
+      placeholder: 'Beans, Cups, Cuts',
+    },
+    {
+      name: 'reward',
+      label: 'Reward',
+      type: 'text',
+      helper: '',
+      placeholder: 'Free Coffee, 50% Off',
+    },
+    {
+      name: 'qty',
+      label: 'Quantity',
+      type: 'number',
+      helper: 'The amount of stamps required for the reward (4-12)',
+      placeholder: '',
+    },
+  ];
 
-const inputs = [
-  {
-    name: 'campaign_name',
-    label: 'Campaign Name',
-    type: 'text',
-    placeholder: 'Buy X, Get Y'
-  },
-  {
-    name: 'unit',
-    label: 'Unit',
-    type: 'text',
-    placeholder: 'Beans, Cups, Cuts'
-  },
-  {
-    name: 'reward',
-    label: 'Reward',
-    type: 'text',
-    placeholder: 'Free Coffee, 50% Off'
-  },
-  {
-    name: 'qty',
-    label: 'Quantity',
-    type: 'number',
-    placeholder: ''
-  },
-]
-
-const LoyaltyCardOptions = ({ formData, setFormData }) => {
   return (
     <div>
       {inputs.map((item, index) => (
-        <CustomInput data={item} key={item+index} />
+        <div className="mt-4" key={item + index}>
+          <Label>{item.label}</Label>
+          <p className="text-xs text-gray-700">{item.helper}</p>
+          <Input
+            className="mt-1"
+            value={values[item.name]}
+            type={item.type}
+            placeholder={item.placeholder}
+            name={item.name}
+            onChange={handleChange}
+          />
+        </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default LoyaltyCardOptions
+export default LoyaltyCardOptions;

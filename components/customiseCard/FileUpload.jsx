@@ -24,7 +24,7 @@ const FileUpload = ({ formData, setFormData }) => {
 
       <FileUploader
         value={files}
-        onValueChange={(e) => console.log(e)}
+        onValueChange={setFiles}
         dropzoneOptions={dropZoneConfig}
         className="relative bg-background rounded-md mt-1"
       >

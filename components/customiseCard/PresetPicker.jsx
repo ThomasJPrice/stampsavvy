@@ -1,3 +1,5 @@
+'use client'
+
 import { Button } from "../ui/button"
 
 import Bean from '@/assets/icons/bean.svg';
@@ -42,10 +44,10 @@ const presets = [
 
 const PresetPicker = ({ formData, setFormData }) => {
   const handlePresetClick = (presetFormData) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      ...presetFormData,
-    }));
+    // setFormData((prevData) => ({
+    //   ...prevData,
+    //   ...presetFormData,
+    // }));
   };
 
   return (
