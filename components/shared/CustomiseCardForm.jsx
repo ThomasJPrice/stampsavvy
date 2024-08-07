@@ -34,9 +34,9 @@ const CustomiseCardForm = ({ cardInfo, onSave, businessData }) => {
         handleSubmit,
         setFieldValue
       }) => (
-        <form onSubmit={handleSubmit} className='w-full flex flex-row gap-16'>
+        <form onSubmit={handleSubmit} className='w-full flex flex-col lg:flex-row gap-8 lg:gap-16'>
           {/* form */}
-          <div className="w-1/3" onSubmit={handleSubmit}>
+          <div className="lg:w-1/2" onSubmit={handleSubmit}>
             {/* branding */}
             <div>
               <h4 className="font-medium text-lg">Your Branding</h4>
@@ -66,7 +66,7 @@ const CustomiseCardForm = ({ cardInfo, onSave, businessData }) => {
           </div>
 
           {/* preview */}
-          <div className="flex-1 border relative">
+          <div className="flex-1 relative flex justify-center">
             <CardPreview values={values} name={businessData.name} />
           </div>
 

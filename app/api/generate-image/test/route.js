@@ -3,6 +3,7 @@ import Bean from '@/assets/icons/bean.svg';
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { invertColor } from "@/lib/utils";
 
 async function getData(supabase, id) {
   const { data: userData } = await supabase.from('loyaltyCards').select().match({ id: id }).single()
@@ -25,14 +26,15 @@ export async function GET(request) {
   let FGCOLOUR
   let QTY = 0
 
-
   try {
-    QTY = parseInt(request.nextUrl.searchParams.get('qty'))
+    QTY = parseInt(request.nextUrl.searchParams.get('qty')) + 1
     BGCOLOUR = request.nextUrl.searchParams.get('bgColour')
     FGCOLOUR = request.nextUrl.searchParams.get('fgColour')
   } catch (error) {
     return NextResponse.json({ error: err.message }, { status: 400 })
   }
+
+  let mainColour = invertColor(`#${BGCOLOUR}`, true)
 
   const renderIcons = (start, end) => {
     return Array.from({ length: end - start }).map((_, index) => {
@@ -42,8 +44,8 @@ export async function GET(request) {
 
       // Calculate styles
       const bgColor = isLast ? `bg-[#${FGCOLOUR}] bg-opacity-30` : 'bg-transparent';
-      const borderStyles = isAchieved || (isLast && lastAchieved) ? `#${FGCOLOUR}` : `#cccccc`;
-      const iconColor = isAchieved || (isLast && lastAchieved) ? `#${FGCOLOUR}` : '#cccccc';
+      const borderStyles = isAchieved || (isLast && lastAchieved) ? `#${FGCOLOUR}` : `${mainColour}`;
+      const iconColor = isAchieved || (isLast && lastAchieved) ? `#${FGCOLOUR}` : `${mainColour}`;
 
       const width = (904 - (16 * (QTY - 1))) / QTY;
       const height = (256 / 2)
@@ -51,13 +53,13 @@ export async function GET(request) {
       return (
         <div
           key={index}
-          tw={`flex justify-center rounded-full border ${bgColor} ${QTY <= 5 ? 'my-auto p-6' : 'p-3'}`}
+          tw={`flex justify-center rounded-full border border-[2px] ${bgColor} ${QTY <= 5 ? 'my-auto p-6' : 'p-3'}`}
           style={{
             width: QTY <= 5 ? `${width}px` : `${height}px`,
             height: QTY <= 5 ? `${width}px` : `${height}px`,
             color: iconColor,
             borderColor: borderStyles,
-            // opacity: isAchieved ? '1' : '0.6'
+            opacity: isAchieved ? '1' : '0.7'
           }}
         >
           <Bean tw={`w-full h-full ${QTY <= 5 ? '' : 'p-2'}`} fill={iconColor} />
