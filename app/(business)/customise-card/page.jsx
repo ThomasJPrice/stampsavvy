@@ -20,7 +20,7 @@ const CustomiseCard = async ({ searchParams }) => {
   return (
     <div className="px-4 max-w-[1200px] mx-auto mb-16">
       <h1 className="text-primary text-2xl font-semibold text-center py-8">Customise your Loyalty Card Campaign!</h1>
-      <CustomiseCardForm cardInfo={cardInfo} onSave={handleFormSave} />
+      <CustomiseCardForm cardInfo={cardInfo} onSave={handleFormSave} businessData={businessData} />
     </div>
   );
 };

@@ -7,7 +7,7 @@ import { Formik } from 'formik'
 import { BrandingOptions, CardPreview, LoyaltyCardOptions, PresetPicker } from '../customiseCard'
 import toast from 'react-hot-toast'
 
-const CustomiseCardForm = ({ cardInfo, onSave }) => {
+const CustomiseCardForm = ({ cardInfo, onSave, businessData }) => {
   const onSubmit = (data) => {
     console.log(data)
     toast.success('Saved!')
@@ -67,7 +67,7 @@ const CustomiseCardForm = ({ cardInfo, onSave }) => {
 
           {/* preview */}
           <div className="flex-1 border relative">
-            <CardPreview values={values} />
+            <CardPreview values={values} name={businessData.name} />
           </div>
 
 
