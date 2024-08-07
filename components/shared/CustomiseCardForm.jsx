@@ -24,7 +24,7 @@ const CustomiseCardForm = ({ cardInfo, onSave, businessData }) => {
           logo: cardInfo.logo || '',
           icon: cardInfo.icon || '',
           fgColour: cardInfo.fgColour || '#ffffff',
-          bgColour: cardInfo.bgColour || '#5c3e32'
+          bgColour: cardInfo.bgColour || '#5c3e32',
         }
       }
       onSubmit={onSubmit}>

@@ -13,7 +13,7 @@ const ColourPicker = ({ title, ...props }) => {
   };
 
   return (
-    <div className="flex-1 whitespace-nowrap">
+    <div className="flex-1 whitespace-nowrap mt-1">
       <Label>{title}</Label>
 
       <div className="mt-1">

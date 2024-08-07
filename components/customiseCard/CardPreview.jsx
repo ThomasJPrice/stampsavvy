@@ -1,9 +1,9 @@
 const CardPreview = ({ values, name }) => {
-  console.log(values);
+  console.log(`${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-image/test?qty=${values.qty}&bgColour=${values.bgColour.replace('#', '')}&fgColour=${values.fgColour.replace('#', '')}&achievedColour=${values.achievedColour.replace('#', '')}`);
 
 
   return (
-    <div className="w-[380px] aspect-[0.644] border fixed">
+    <div className="max-w-[380px] w-full aspect-[0.644] border fixed">
       <div className="w-full h-full flex flex-col overflow-hidden rounded-[32px]" style={{ backgroundColor: values.bgColour }}>
         {/* top section */}
         <div className="mx-4 mt-4">
@@ -70,6 +70,13 @@ const CardPreview = ({ values, name }) => {
               </div>
             </div>
           </div> 
+        </div>
+
+        {/* stamp image */}
+        <div>
+          <div>
+            <img src={`${process.env.NEXT_PUBLIC_ORIGIN}/api/generate-image/test?qty=${values.qty}&bgColour=${values.bgColour.replace('#', '')}&fgColour=${values.fgColour.replace('#', '')}&achievedColour=${values.achievedColour.replace('#', '')}`} alt="" />
+          </div>
         </div>
       </div>
     </div>
